@@ -1,0 +1,46 @@
+.preloader-container {
+  position: fixed;
+  inset: 0;
+  background-color: #0f172a; /* dark blue-gray */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.lottie-wrapper {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 20px;
+}
+
+.preloader-text {
+  font-size: 1.2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: #cbd5e1; /* soft light-gray text */
+  animation: textFade 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes textFade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

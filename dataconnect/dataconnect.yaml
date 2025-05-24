@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "daily-planner"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "daily-planner-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
