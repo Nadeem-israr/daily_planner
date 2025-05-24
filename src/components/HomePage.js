@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { Howl } from 'howler';
 import TodaysOverview from './TodaysOverview';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';  // Adjust path to your firebase.js
 
 const FloatingCard = styled(Paper)(({ theme }) => ({

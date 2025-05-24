@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Grid, Paper, Typography, Button, Dialog, DialogTitle, DialogContent,
-  TextField, DialogActions, List, ListItem, ListItemText, IconButton, Box, Fade, Zoom
+  TextField, DialogActions, List, ListItem, ListItemText, IconButton, Box
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,7 +13,6 @@ import {
   updateDoc,
   deleteDoc,
   doc,
-  query,
   setDoc
 } from 'firebase/firestore';
 import HomeButton from './HomeButton';
@@ -48,7 +47,7 @@ const MealPlanner = ({ isDarkMode }) => {
       setManualGroceries(loadedGroceries);
     };
     loadData();
-  }, []);
+  }, [groceriesCol, mealsCol]);
 
   // Delete meal by Firestore doc ID
   const handleDeleteMeal = async (docId) => {
