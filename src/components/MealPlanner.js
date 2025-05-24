@@ -72,7 +72,7 @@ const MealPlanner = ({ isDarkMode }) => {
   };
 
   // Update or delete manual grocery in Firestore
-  const updateManualGrocery = async (item, quantity) => {
+ /* const updateManualGrocery = async (item, quantity) => {
     if (quantity <= 0) {
       await deleteDoc(doc(db, 'manualGroceries', item));
       setManualGroceries(prev => {
@@ -89,7 +89,7 @@ const MealPlanner = ({ isDarkMode }) => {
       });
       setManualGroceries(prev => ({ ...prev, [item]: quantity }));
     }
-  };
+  };*/
 
   // Better manual grocery update with setDoc (create or update)
   const setManualGrocery = async (item, quantity) => {
