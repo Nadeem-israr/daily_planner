@@ -31,6 +31,7 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
         // Fetch events from Firestore
         const eventsSnapshot = await getDocs(collection(db, 'events'));
         const allEvents = eventsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+         console.log('All Events:', allEvents); // DEBUG
         const filteredEvents = allEvents.filter(event => {
           if (!event.start) return false;
           try {
@@ -39,12 +40,17 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
             return false;
           }
         });
+        console.log('Filtered Events for today:', filteredEvents); // DEBUG
 
         // Fetch meals from Firestore
         const mealsSnapshot = await getDocs(collection(db, 'meals'));
         const allMeals = mealsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const filteredMeals = allMeals.filter(meal => meal.day === dayName);
+        console.log('All Meals:', allMeals); // DEBUG
 
+
+        const filteredMeals = allMeals.filter(meal => meal.day === dayName);
+        console.log('Filtered Meals for today:', filteredMeals); // DEBUG
+        
         setTodayEvents(filteredEvents);
         setTodayMeals(filteredMeals);
       } catch (error) {
