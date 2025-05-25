@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Typography, Paper, Grid } from '@mui/material';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import HomeButton from './HomeButton'; // adjust path as needed
-
-// Firebase imports
+import HomeButton from './HomeButton';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // adjust the path to your firebase config
+import { db } from '../firebase';
 
 const listItemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,29 +26,40 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
         const todayStr = format(new Date(), 'yyyy-MM-dd');
         const dayName = format(new Date(), 'EEEE');
 
-        // Fetch events from Firestore
+        // Fetch and convert events
         const eventsSnapshot = await getDocs(collection(db, 'events'));
-        const allEvents = eventsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-         console.log('All Events:', allEvents); // DEBUG
+        const allEvents = eventsSnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            start: data.start?.toDate?.() || null,
+            end: data.end?.toDate?.() || null,
+          };
+        });
+
+        console.log('All Events:', allEvents); // DEBUG
+
         const filteredEvents = allEvents.filter(event => {
           if (!event.start) return false;
           try {
-            return format(new Date(event.start), 'yyyy-MM-dd') === todayStr;
+            return format(event.start, 'yyyy-MM-dd') === todayStr;
           } catch {
             return false;
           }
         });
+
         console.log('Filtered Events for today:', filteredEvents); // DEBUG
 
-        // Fetch meals from Firestore
+        // Fetch meals
         const mealsSnapshot = await getDocs(collection(db, 'meals'));
         const allMeals = mealsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('All Meals:', allMeals); // DEBUG
 
+        console.log('All Meals:', allMeals); // DEBUG
 
         const filteredMeals = allMeals.filter(meal => meal.day === dayName);
         console.log('Filtered Meals for today:', filteredMeals); // DEBUG
-        
+
         setTodayEvents(filteredEvents);
         setTodayMeals(filteredMeals);
       } catch (error) {
@@ -87,21 +96,16 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
     const y = e.clientY - rect.top;
     const midX = rect.width / 2;
     const midY = rect.height / 2;
-
     const rotateX = ((y - midY) / midY) * -6;
     const rotateY = ((x - midX) / midX) * 6;
-
     setTilt({ rotateX, rotateY });
   };
 
-  const handleMouseLeave = () => {
-    setTilt({ rotateX: 0, rotateY: 0 });
-  };
+  const handleMouseLeave = () => setTilt({ rotateX: 0, rotateY: 0 });
 
   return (
     <div style={containerStyle}>
       {showHomeButton && <HomeButton />}
-
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 4 }}>
         Today's Schedule - {format(new Date(), 'PPPP')}
       </Typography>
@@ -122,18 +126,14 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
             }}
           >
             <Paper sx={paperStyle} elevation={10}>
-              <Typography variant="h6" gutterBottom>
-                Events
-              </Typography>
-
+              <Typography variant="h6" gutterBottom>Events</Typography>
               {todayEvents.length === 0 ? (
                 <Typography>No events for today.</Typography>
               ) : (
                 <AnimatePresence>
                   {todayEvents.map((event, i) => {
-                    const startDate = new Date(event.start);
-                    const endDate = new Date(event.end);
-
+                    const startDate = event.start;
+                    const endDate = event.end;
                     return (
                       <motion.div
                         key={event.id || i}
@@ -146,8 +146,8 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
                       >
                         <Typography sx={{ fontWeight: '600' }}>{event.title}</Typography>
                         <Typography variant="body2" sx={eventTimeStyle}>
-                          {isNaN(startDate) ? 'Start time N/A' : format(startDate, 'hh:mm a')} -{' '}
-                          {isNaN(endDate) ? 'End time N/A' : format(endDate, 'hh:mm a')}
+                          {startDate ? format(startDate, 'hh:mm a') : 'Start time N/A'} -{' '}
+                          {endDate ? format(endDate, 'hh:mm a') : 'End time N/A'}
                         </Typography>
                       </motion.div>
                     );
@@ -173,10 +173,7 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
             }}
           >
             <Paper sx={paperStyle} elevation={10}>
-              <Typography variant="h6" gutterBottom>
-                Meals
-              </Typography>
-
+              <Typography variant="h6" gutterBottom>Meals</Typography>
               {todayMeals.length === 0 ? (
                 <Typography>No meals planned for today.</Typography>
               ) : (
@@ -191,15 +188,9 @@ const TodaysOverview = ({ isDarkMode, showHomeButton = true }) => {
                       variants={listItemVariants}
                       style={{ marginBottom: 12 }}
                     >
-                      <Typography>
-                        <strong>Breakfast:</strong> {meal.breakfast}
-                      </Typography>
-                      <Typography>
-                        <strong>Lunch:</strong> {meal.lunch}
-                      </Typography>
-                      <Typography>
-                        <strong>Dinner:</strong> {meal.dinner}
-                      </Typography>
+                      <Typography><strong>Breakfast:</strong> {meal.breakfast}</Typography>
+                      <Typography><strong>Lunch:</strong> {meal.lunch}</Typography>
+                      <Typography><strong>Dinner:</strong> {meal.dinner}</Typography>
                     </motion.div>
                   ))}
                 </AnimatePresence>
