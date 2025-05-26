@@ -59,7 +59,7 @@ const MealPlanner = ({ isDarkMode }) => {
       setManualGroceries(loadedGroceries);
     };
     loadData();
-  }, []);
+  }, [groceriesCol, mealsCol]);
 
   const toggleExpandMeal = (mealId) => {
     setExpandedMeal(expandedMeal === mealId ? null : mealId);
@@ -69,7 +69,7 @@ const MealPlanner = ({ isDarkMode }) => {
     await deleteDoc(doc(db, 'meals', docId));
     setMeals(prev => prev.filter(meal => meal.id !== docId));
   };
-  
+
   const setManualGrocery = async (item, quantity) => {
     if (quantity <= 0) {
       await deleteDoc(doc(db, 'manualGroceries', item));
