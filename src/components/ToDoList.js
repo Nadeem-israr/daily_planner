@@ -1,5 +1,4 @@
-// components/ToDoList.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Checkbox, IconButton, TextField, List, ListItem, ListItemSecondaryAction, ListItemText
 } from '@mui/material';
@@ -16,7 +15,7 @@ const ToDoList = ({ isDarkMode }) => {
   const [tasks, setTasks] = useState([]);
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     const q = query(
       collection(db, 'todos'),
       where('date', '==', todayStr),
@@ -24,7 +23,7 @@ const ToDoList = ({ isDarkMode }) => {
     );
     const snapshot = await getDocs(q);
     setTasks(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-  };
+  }, [todayStr]);
 
   const addTask = async () => {
     if (taskInput.trim() === '') return;
