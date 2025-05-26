@@ -51,7 +51,7 @@ const ToDoList = ({ isDarkMode }) => {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [fetchTasks]);
 
   return (
     <motion.div
