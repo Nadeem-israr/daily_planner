@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { Howl } from 'howler';
+import ToDoList from './ToDoList';
 import TodaysOverview from './TodaysOverview';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';  // Adjust path to your firebase.js
@@ -202,6 +203,8 @@ const HomePage = ({ toggleTheme, isDarkMode }) => {
         style={{
           marginTop: '3rem',
           maxWidth: '900px',
+          maxHeight: '500px',
+          overflowY: 'auto',
           marginLeft: 'auto',
           marginRight: 'auto',
           boxShadow: isDarkMode
@@ -220,6 +223,23 @@ const HomePage = ({ toggleTheme, isDarkMode }) => {
           showHomeButton={false}
         />
       </div>
+      {/* To-Do List Section */}
+      <div
+        style={{
+          marginTop: '3rem',
+          maxWidth: '900px',
+          margin: '2rem auto 4rem',
+          boxShadow: isDarkMode
+            ? '0 8px 24px rgba(255,255,255,0.1)'
+            : '0 8px 24px rgba(0,0,0,0.1)',
+          borderRadius: '16px',
+          backgroundColor: isDarkMode ? '#1e1e1e' : '#fff',
+          padding: '2rem',
+        }}
+>
+        <ToDoList isDarkMode={isDarkMode} />
+      </div>
+
     </div>
   );
 };
